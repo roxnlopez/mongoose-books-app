@@ -19,7 +19,7 @@ app.use(express.static('public'));
 // body parser config to accept our datatypes
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+var db = require('./models');
 
 ////////////////////
 //  DATA
@@ -49,18 +49,9 @@ var books = [
   }
 ];
 
-
-
-
-
-
-
 ////////////////////
 //  ROUTES
 ///////////////////
-
-
-
 
 // define a root route: localhost:3000/
 app.get('/', function (req, res) {
@@ -69,9 +60,11 @@ app.get('/', function (req, res) {
 
 // get all books
 app.get('/api/books', function (req, res) {
-  // send all books as JSON response
-  console.log('books index');
+  // get books from DB, then send all books as JSON response
+  db.Book.find(function(err, books){
+    if (err) { return console.log("index error: " + err); }
   res.json(books);
+  });
 });
 
 // get one book
